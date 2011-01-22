@@ -1,7 +1,5 @@
 package com.alin.androidball;
 
-import java.util.Random;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -106,26 +104,13 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 		private float r;
 		
 		private Ball() {
-			Random rand = new Random();
-			float v;
-			float a = (float) (3 * Math.PI / 2);
-			
 			x = 130;
 			y = 180;
 			r = 10.0f;
 			
-			//v = 300.0f * rand.nextFloat();
-			//vx = (float) (v * Math.cos(a));
-			//vy = (float) (v * Math.sin(a));
 			vx = 0.0f;
 			vy = 0.0f;
 		}
-		
-		/*private Ball(float x, float y) {
-			this.x = x;
-			this.y = y;
-			r = 10.0f;
-		}*/
 		
 		private void roll(float dt) {
 			x += vx * dt;
