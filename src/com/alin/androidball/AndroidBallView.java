@@ -1,5 +1,8 @@
 package com.alin.androidball;
 
+import com.alin.androidball.math.Vector2d;
+import com.alin.androidball.math.Physics;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,8 +15,6 @@ import android.view.SurfaceView;
 public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = "AndroidBallView";
 	private static final float NANOSECONDS_PER_SECOND = 1000000000.0f;
-	private static final float GRAVITY_IN_METERS = 9.8f;
-	private static final float GRAVITY_IN_INCHES = 32.2f * 12.0f;
 	
 	private androidBallLoop abLoop;
 	private float xdpi;
@@ -28,19 +29,14 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 	private class androidBallLoop extends Thread {
 		private long prevTime;
 		private float dTime;
-		private float gravX;
-		private float gravY;
+		private Vector2d gravity = new Vector2d(0.0f, 9.8f);
 		
 		Ball b = new Ball();
 		
-		private androidBallLoop() {
-			
-		}
-		
 		@Override
 		public void run() {
+			Log.i(TAG, "Start rolling the ball");
 			prevTime = System.nanoTime();
-			updateTimer();
 			while (!isInterrupted()) {
 				synchronized (this) {
 					updateTimer(); //keep track of the amount of time passed
@@ -62,7 +58,7 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 				synchronized (this) {
 					mpaint.setStyle(Paint.Style.FILL_AND_STROKE);
 					mpaint.setColor(Color.RED);
-					canvas.drawCircle(b.x, b.y, b.r, mpaint);
+					canvas.drawCircle(b.pos.getX(), b.pos.getY(), b.r, mpaint);
 				}
 			} finally {
 				getHolder().unlockCanvasAndPost(canvas);
@@ -74,7 +70,7 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 		}
 
 		private void updatePhysics() {
-			b.accelerate(dTime, gravX, gravY);
+			b.accelerate(dTime, gravity);
 		}
 		
 		private void updateTimer() {
@@ -84,8 +80,8 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 		}
 		
 		private void setGravity(float gx, float gy) {
-			gravX = xdpi * (GRAVITY_IN_INCHES/200.0f) * (gx / GRAVITY_IN_METERS);
-			gravY = ydpi * (GRAVITY_IN_INCHES/200.0f) * (gy / GRAVITY_IN_METERS);
+			gravity.set(xdpi * (Physics.GRAVITY_IN_INCHES/200.0f) * (gx / Physics.GRAVITY_IN_METERS),
+					ydpi * (Physics.GRAVITY_IN_INCHES/200.0f) * (gy / Physics.GRAVITY_IN_METERS));
 		}
 	}
 	
@@ -99,27 +95,22 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 	}
 	
 	private class Ball {
-		private float x, y;
-		private float vx, vy;
+		private Vector2d pos, v;
 		private float r;
 		
 		private Ball() {
-			x = 130;
-			y = 180;
+			pos = new Vector2d(130.0f, 180.0f);
 			r = 10.0f;
 			
-			vx = 0.0f;
-			vy = 0.0f;
+			v = new Vector2d(0.0f, 0.0f);
 		}
 		
 		private void roll(float dt) {
-			x += vx * dt;
-			y += vy * dt;
+			pos.multiplyadd(dt, v);
 		}
 		
-		private void accelerate(float dt, float ax, float ay) {
-			vx += ax * dt;
-			vy += ay * dt;
+		private void accelerate(float dt, Vector2d acc) {
+			v.multiplyadd(dt, acc);
 		}
 	}
 	
