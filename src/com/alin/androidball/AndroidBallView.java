@@ -86,8 +86,8 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 		}
 		
 		private void setGravity(float gx, float gy) {
-			gravX = xdpi * (GRAVITY_IN_INCHES/100.0f) * (gx / GRAVITY_IN_METERS);
-			gravY = ydpi * (GRAVITY_IN_INCHES/100.0f) * (gy / GRAVITY_IN_METERS);
+			gravX = xdpi * (GRAVITY_IN_INCHES/200.0f) * (gx / GRAVITY_IN_METERS);
+			gravY = ydpi * (GRAVITY_IN_INCHES/200.0f) * (gy / GRAVITY_IN_METERS);
 		}
 	}
 	
@@ -114,9 +114,11 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 			y = 180;
 			r = 10.0f;
 			
-			v = 300.0f * rand.nextFloat();
-			vx = (float) (v * Math.cos(a));
-			vy = (float) (v * Math.sin(a));
+			//v = 300.0f * rand.nextFloat();
+			//vx = (float) (v * Math.cos(a));
+			//vy = (float) (v * Math.sin(a));
+			vx = 0.0f;
+			vy = 0.0f;
 		}
 		
 		/*private Ball(float x, float y) {
