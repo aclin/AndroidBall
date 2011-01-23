@@ -23,6 +23,12 @@ public class Vector2d {
 		return this;
 	}
 	
+	public Vector2d minus(Vector2d v) {
+		x -= v.getX();
+		y -= v.getY();
+		return this;
+	}
+	
 	public Vector2d multiply(Vector2d v) {
 		x *= v.getX();
 		y *= v.getY();
@@ -35,7 +41,7 @@ public class Vector2d {
 		return this;
 	}
 	
-	public Vector2d multiplyadd(float s, Vector2d v) {
+	public Vector2d multiplyAdd(float s, Vector2d v) {
 		x += s * v.getX();
 		y += s * v.getY();
 		return this;
@@ -45,8 +51,17 @@ public class Vector2d {
 		return x * v.x + y * v.y;
 	}
 	
+	public float cross(Vector2d v) {
+		return x * v.getY() - y * v.getX();
+	}
+	
 	public Vector2d normalize() {
 		scale(1.0f / magnitude());
+		return this;
+	}
+	
+	public Vector2d reflect(Vector2d n) {
+		multiplyAdd(-2.0f * dot(n), n);
 		return this;
 	}
 	
