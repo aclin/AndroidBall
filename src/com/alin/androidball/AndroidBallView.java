@@ -74,6 +74,7 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 					mpaint.setStyle(Paint.Style.FILL_AND_STROKE);
 					mpaint.setColor(Color.RED);
 					canvas.drawCircle(b.pos.getX(), b.pos.getY(), b.r, mpaint);
+					/*
 					canvas.drawLine(NORTH_WALL.getStart().getX(), NORTH_WALL.getStart().getY(),
 									NORTH_WALL.getEnd().getX(), NORTH_WALL.getEnd().getY(), mpaint);
 					mpaint.setColor(Color.BLACK);
@@ -85,6 +86,7 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 					mpaint.setColor(Color.MAGENTA);
 					canvas.drawLine(WEST_WALL.getStart().getX(), WEST_WALL.getStart().getY(),
 									WEST_WALL.getEnd().getX(), WEST_WALL.getEnd().getY(), mpaint);
+					*/
 				}
 			} finally {
 				getHolder().unlockCanvasAndPost(canvas);
@@ -98,15 +100,22 @@ public class AndroidBallView extends SurfaceView implements SurfaceHolder.Callba
 		private void updatePhysics() {
 			b.accelerate(dTime, gravity);
 			if (Physics.pointToLineDistance(b.pos, NORTH_WALL) <= b.r) {
+				b.pos.set(b.pos.getX(), b.r);
 				b.v.reflect(NORTH_WALL.getNormal());
 				b.v.scale(b.bounce);
-			} else if (Physics.pointToLineDistance(b.pos, SOUTH_WALL) <= b.r) {
+			}
+			if (Physics.pointToLineDistance(b.pos, SOUTH_WALL) <= b.r) {
+				b.pos.set(b.pos.getX(), SOUTH_WALL.getStart().getY() - b.r);
 				b.v.reflect(SOUTH_WALL.getNormal());
 				b.v.scale(b.bounce);
-			} else if (Physics.pointToLineDistance(b.pos, EAST_WALL) <= b.r) {
+			}
+			if (Physics.pointToLineDistance(b.pos, EAST_WALL) <= b.r) {
+				b.pos.set(EAST_WALL.getStart().getX() - b.r, b.pos.getY());
 				b.v.reflect(EAST_WALL.getNormal());
 				b.v.scale(b.bounce);
-			} else if (Physics.pointToLineDistance(b.pos, WEST_WALL) <= b.r) {
+			}
+			if (Physics.pointToLineDistance(b.pos, WEST_WALL) <= b.r) {
+				b.pos.set(b.r, b.pos.getY());
 				b.v.reflect(WEST_WALL.getNormal());
 				b.v.scale(b.bounce);
 			}
